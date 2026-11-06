@@ -51,7 +51,11 @@
 ## Установка
 
 <!-- Опишите установку: клонирование, зависимости, переменные окружения -->
+Проект состоит из бэкенда (Java / Spring Boot) и фронтенда. Вы можете запустить их с помощью Docker (рекомендуется) или локально в среде разработки.
 
+### Способ 1: Запуск через Docker (Рекомендуемый)
+
+Главное требование проекта — приложение упаковывается в Docker-образ.
 ```bash
 git clone https://github.com/SvetaZalyadnova/ai-for-developers-project-386.git
 cd ai-for-developers-project-386
@@ -60,6 +64,9 @@ cd ai-for-developers-project-386
 ## Использование
 
 <!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
+<img width="648" height="493" alt="image" src="https://github.com/user-attachments/assets/1e1c4575-d6ac-4dd7-8046-e69927d66cc2" />
+<img width="650" height="494" alt="image" src="https://github.com/user-attachments/assets/fff0bada-eab4-40a8-b0c2-1117191f3146" />
+<img width="651" height="491" alt="image" src="https://github.com/user-attachments/assets/6b7e112a-33c7-4970-89cd-f6e80ae059c3" />
 
 ---
 
