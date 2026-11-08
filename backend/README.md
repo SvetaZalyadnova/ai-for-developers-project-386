@@ -13,3 +13,9 @@ Run the backend tests with:
 ```bash
 mvn test
 ```
+
+Checkstyle runs automatically during Maven validation. To run it directly:
+
+```bash
+mvn checkstyle:check
+```
