@@ -69,6 +69,16 @@ Plaintext
 
 ## Использование
 
+### Локальный запуск фронтенда
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Для production-сборки выполните `npm run build` из каталога `frontend`. Фронтенд пока работает в демо-режиме: бронирования хранятся в памяти открытой страницы; API бэкенда в репозитории пока нет.
+
 <!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
 <img width="648" height="493" alt="image" src="https://github.com/user-attachments/assets/1e1c4575-d6ac-4dd7-8046-e69927d66cc2" />
 <img width="650" height="494" alt="image" src="https://github.com/user-attachments/assets/fff0bada-eab4-40a8-b0c2-1117191f3146" />
