@@ -13,3 +13,14 @@
 
 ## Коммиты
 - Используйте Conventional Commits: `feat:`, `fix:`, `chore:`, `refactor:`, `test:` или `docs:`.
+
+## Agent skills
+
+### Issue tracker
+Задачи и спецификации ведутся в GitHub Issues этого репозитория через `gh`. См. `docs/agents/issue-tracker.md`.
+
+### Triage labels
+Используйте стандартные labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. См. `docs/agents/triage-labels.md`.
+
+### Domain docs
+Один контекст: корневой `GLOSSARY.md` и решения в `docs/adr/`. См. `docs/agents/domain.md`.
