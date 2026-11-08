@@ -56,6 +56,9 @@
 .submit:disabled { background: #c8c0dc; cursor: not-allowed; }
 .submit b { margin-left: 8px; font-size: 14px; font-weight: 400; }
 .demo-note { margin: 13px 0 0; text-align: center; }
+.not-found { display: grid; min-height: 55vh; align-content: center; justify-items: start; gap: 12px; }
+.not-found h1 { margin: 0; color: #292638; font-size: 30px; }
+.not-found a { color: #7054c5; font-size: 13px; font-weight: 650; }
 footer { display: flex; justify-content: space-between; padding-bottom: 22px; color: #aaa7b2; font-size: 10px; }
 button:focus-visible,a:focus-visible { outline: 3px solid #9c83e7aa; outline-offset: 2px; }
 @media(max-width:850px) {

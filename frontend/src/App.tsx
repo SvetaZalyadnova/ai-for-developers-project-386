@@ -1,5 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import './App.css'
+import HomePage from './HomePage'
 
 const meetingTypes = [
   { title: 'Знакомство', duration: 15 },
@@ -13,7 +15,7 @@ const dateLabel = (key: string, options: Intl.DateTimeFormatOptions) =>
 const timeLabel = (minutes: number) =>
   `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`
 
-function App() {
+function BookingPage() {
   const [now] = useState(() => Date.now())
   const dates = useMemo(() => {
     const current = new Date(now)
@@ -57,7 +59,7 @@ function App() {
   return (
     <main className="page">
       <header className="topbar">
-        <a className="brand" href="/"><span className="brand-mark">К</span> календарь<span className="brand-light">звонков</span></a>
+        <Link className="brand" to="/"><span className="brand-mark">К</span> календарь<span className="brand-light">звонков</span></Link>
         <span className="online"><i /> Онлайн-запись открыта</span>
       </header>
       <div className="booking-layout">
@@ -126,6 +128,33 @@ function App() {
       </div>
       <footer>© {new Date(now).getFullYear()} Календарь звонков <span>Просто договориться о встрече</span></footer>
     </main>
+  )
+}
+
+function NotFoundPage() {
+  return (
+    <main className="page">
+      <header className="topbar">
+        <Link className="brand" to="/"><span className="brand-mark">К</span> календарь<span className="brand-light">звонков</span></Link>
+      </header>
+      <section className="not-found">
+        <p className="eyebrow">404</p>
+        <h1>Страница не найдена</h1>
+        <Link to="/">Вернуться на главную</Link>
+      </section>
+    </main>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/booking" element={<BookingPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
