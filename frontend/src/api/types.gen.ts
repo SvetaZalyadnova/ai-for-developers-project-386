@@ -31,6 +31,13 @@ export type CreateBookingRequest = {
     guest: GuestInput;
 };
 
+export type CreateMeetingTypeRequest = {
+    slug: string;
+    title: string;
+    description: string;
+    durationMinutes: number;
+};
+
 export type FieldError = {
     field: string;
     code: string;
@@ -59,6 +66,17 @@ export type MeetingTypesResponse = {
     items: Array<MeetingType>;
 };
 
+export type OwnerBooking = {
+    guest: GuestInput;
+    meetingType: MeetingTypeSnapshot;
+    startsAt: string;
+    endsAt: string;
+};
+
+export type OwnerBookingsResponse = {
+    items: Array<OwnerBooking>;
+};
+
 export type ProblemDetails = {
     type: string;
     title: string;
@@ -66,6 +84,12 @@ export type ProblemDetails = {
     detail: string;
     code: string;
     errors?: Array<FieldError>;
+};
+
+export type UpdateMeetingTypeRequest = {
+    title: string;
+    description: string;
+    durationMinutes: number;
 };
 
 export type CreateBookingData = {
@@ -150,3 +174,152 @@ export type GetAvailabilityResponses = {
 };
 
 export type GetAvailabilityResponse = GetAvailabilityResponses[keyof GetAvailabilityResponses];
+
+export type ListOwnerBookingsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/owner/bookings';
+};
+
+export type ListOwnerBookingsErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: ProblemDetails;
+};
+
+export type ListOwnerBookingsError = ListOwnerBookingsErrors[keyof ListOwnerBookingsErrors];
+
+export type ListOwnerBookingsResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: OwnerBookingsResponse;
+};
+
+export type ListOwnerBookingsResponse = ListOwnerBookingsResponses[keyof ListOwnerBookingsResponses];
+
+export type ListOwnerMeetingTypesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/owner/meeting-types';
+};
+
+export type ListOwnerMeetingTypesErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: ProblemDetails;
+};
+
+export type ListOwnerMeetingTypesError = ListOwnerMeetingTypesErrors[keyof ListOwnerMeetingTypesErrors];
+
+export type ListOwnerMeetingTypesResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: MeetingTypesResponse;
+};
+
+export type ListOwnerMeetingTypesResponse = ListOwnerMeetingTypesResponses[keyof ListOwnerMeetingTypesResponses];
+
+export type CreateMeetingTypeData = {
+    body: CreateMeetingTypeRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/owner/meeting-types';
+};
+
+export type CreateMeetingTypeErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ProblemDetails;
+    /**
+     * Access is unauthorized.
+     */
+    401: ProblemDetails;
+    /**
+     * The request conflicts with the current state of the server.
+     */
+    409: ProblemDetails;
+};
+
+export type CreateMeetingTypeError = CreateMeetingTypeErrors[keyof CreateMeetingTypeErrors];
+
+export type CreateMeetingTypeResponses = {
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     */
+    201: MeetingType;
+};
+
+export type CreateMeetingTypeResponse = CreateMeetingTypeResponses[keyof CreateMeetingTypeResponses];
+
+export type UpdateMeetingTypeData = {
+    body: UpdateMeetingTypeRequest;
+    path: {
+        slug: string;
+    };
+    query?: never;
+    url: '/api/v1/owner/meeting-types/{slug}';
+};
+
+export type UpdateMeetingTypeErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ProblemDetails;
+    /**
+     * Access is unauthorized.
+     */
+    401: ProblemDetails;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ProblemDetails;
+};
+
+export type UpdateMeetingTypeError = UpdateMeetingTypeErrors[keyof UpdateMeetingTypeErrors];
+
+export type UpdateMeetingTypeResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: MeetingType;
+};
+
+export type UpdateMeetingTypeResponse = UpdateMeetingTypeResponses[keyof UpdateMeetingTypeResponses];
+
+export type ArchiveMeetingTypeData = {
+    body?: never;
+    path: {
+        slug: string;
+    };
+    query?: never;
+    url: '/api/v1/owner/meeting-types/{slug}/archive';
+};
+
+export type ArchiveMeetingTypeErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: ProblemDetails;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ProblemDetails;
+};
+
+export type ArchiveMeetingTypeError = ArchiveMeetingTypeErrors[keyof ArchiveMeetingTypeErrors];
+
+export type ArchiveMeetingTypeResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type ArchiveMeetingTypeResponse = ArchiveMeetingTypeResponses[keyof ArchiveMeetingTypeResponses];

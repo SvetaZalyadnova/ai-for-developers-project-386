@@ -53,7 +53,15 @@ public class BookingCalendar {
         return new AvailabilityResponse(dates);
     }
 
-    public synchronized BookingResponse createBooking(CreateBookingRequest request) {
+    public BookingResponse createBooking(CreateBookingRequest request) {
+        synchronized (this) {
+            synchronized (meetingTypeCatalog) {
+                return createBookingWithLockedCatalog(request);
+            }
+        }
+    }
+
+    private BookingResponse createBookingWithLockedCatalog(CreateBookingRequest request) {
         if (request == null) {
             throw badRequest("body", "required", "Данные бронирования обязательны.");
         }

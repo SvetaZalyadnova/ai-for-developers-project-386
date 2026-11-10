@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateBookingData, CreateBookingErrors, CreateBookingResponses, GetAvailabilityData, GetAvailabilityErrors, GetAvailabilityResponses, ListMeetingTypesData, ListMeetingTypesResponses } from './types.gen';
+import type { ArchiveMeetingTypeData, ArchiveMeetingTypeErrors, ArchiveMeetingTypeResponses, CreateBookingData, CreateBookingErrors, CreateBookingResponses, CreateMeetingTypeData, CreateMeetingTypeErrors, CreateMeetingTypeResponses, GetAvailabilityData, GetAvailabilityErrors, GetAvailabilityResponses, ListMeetingTypesData, ListMeetingTypesResponses, ListOwnerBookingsData, ListOwnerBookingsErrors, ListOwnerBookingsResponses, ListOwnerMeetingTypesData, ListOwnerMeetingTypesErrors, ListOwnerMeetingTypesResponses, UpdateMeetingTypeData, UpdateMeetingTypeErrors, UpdateMeetingTypeResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -30,3 +30,41 @@ export const createBooking = <ThrowOnError extends boolean = false>(options: Opt
 export const listMeetingTypes = <ThrowOnError extends boolean = false>(options?: Options<ListMeetingTypesData, ThrowOnError>): RequestResult<ListMeetingTypesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ListMeetingTypesResponses, unknown, ThrowOnError>({ url: '/api/v1/meeting-types', ...options });
 
 export const getAvailability = <ThrowOnError extends boolean = false>(options: Options<GetAvailabilityData, ThrowOnError>): RequestResult<GetAvailabilityResponses, GetAvailabilityErrors, ThrowOnError> => (options.client ?? client).get<GetAvailabilityResponses, GetAvailabilityErrors, ThrowOnError>({ url: '/api/v1/meeting-types/{slug}/availability', ...options });
+
+export const listOwnerBookings = <ThrowOnError extends boolean = false>(options?: Options<ListOwnerBookingsData, ThrowOnError>): RequestResult<ListOwnerBookingsResponses, ListOwnerBookingsErrors, ThrowOnError> => (options?.client ?? client).get<ListOwnerBookingsResponses, ListOwnerBookingsErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/owner/bookings',
+    ...options
+});
+
+export const listOwnerMeetingTypes = <ThrowOnError extends boolean = false>(options?: Options<ListOwnerMeetingTypesData, ThrowOnError>): RequestResult<ListOwnerMeetingTypesResponses, ListOwnerMeetingTypesErrors, ThrowOnError> => (options?.client ?? client).get<ListOwnerMeetingTypesResponses, ListOwnerMeetingTypesErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/owner/meeting-types',
+    ...options
+});
+
+export const createMeetingType = <ThrowOnError extends boolean = false>(options: Options<CreateMeetingTypeData, ThrowOnError>): RequestResult<CreateMeetingTypeResponses, CreateMeetingTypeErrors, ThrowOnError> => (options.client ?? client).post<CreateMeetingTypeResponses, CreateMeetingTypeErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/owner/meeting-types',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const updateMeetingType = <ThrowOnError extends boolean = false>(options: Options<UpdateMeetingTypeData, ThrowOnError>): RequestResult<UpdateMeetingTypeResponses, UpdateMeetingTypeErrors, ThrowOnError> => (options.client ?? client).patch<UpdateMeetingTypeResponses, UpdateMeetingTypeErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/owner/meeting-types/{slug}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const archiveMeetingType = <ThrowOnError extends boolean = false>(options: Options<ArchiveMeetingTypeData, ThrowOnError>): RequestResult<ArchiveMeetingTypeResponses, ArchiveMeetingTypeErrors, ThrowOnError> => (options.client ?? client).post<ArchiveMeetingTypeResponses, ArchiveMeetingTypeErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v1/owner/meeting-types/{slug}/archive',
+    ...options
+});

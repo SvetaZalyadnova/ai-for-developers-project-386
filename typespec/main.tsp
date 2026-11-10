@@ -6,6 +6,13 @@ using TypeSpec.Http;
 @server("http://localhost:8080", "Local server")
 namespace BookingCalendar;
 
+model BearerAuth {
+  @doc("HTTP authentication")
+  type: "http";
+  @doc("Bearer authentication scheme")
+  scheme: "Bearer";
+}
+
 model MeetingType {
   slug: string;
   title: string;
@@ -90,6 +97,45 @@ model CreatedBookingResponse {
   @body body: BookingResponse;
 }
 
+model CreateMeetingTypeRequest {
+  slug: string;
+  title: string;
+  description: string;
+  durationMinutes: int32;
+}
+
+model UpdateMeetingTypeRequest {
+  title: string;
+  description: string;
+  durationMinutes: int32;
+}
+
+model CreatedMeetingTypeResponse {
+  @statusCode statusCode: 201;
+  @body body: MeetingType;
+}
+
+model NoContentResponse {
+  @statusCode statusCode: 204;
+}
+
+model UnauthorizedResponse {
+  @statusCode statusCode: 401;
+  @header("WWW-Authenticate") wwwAuthenticate: string;
+  @body body: ProblemDetails;
+}
+
+model OwnerBooking {
+  guest: GuestInput;
+  meetingType: MeetingTypeSnapshot;
+  startsAt: offsetDateTime;
+  endsAt: offsetDateTime;
+}
+
+model OwnerBookingsResponse {
+  items: OwnerBooking[];
+}
+
 @route("/api/v1/meeting-types")
 @get
 op listMeetingTypes(): MeetingTypesResponse;
@@ -107,3 +153,35 @@ op getAvailability(
 op createBooking(
   @body body: CreateBookingRequest,
 ): CreatedBookingResponse | BadRequestResponse | NotFoundResponse | ConflictResponse;
+
+@route("/api/v1/owner/meeting-types")
+@get
+@useAuth(BearerAuth)
+op listOwnerMeetingTypes(): MeetingTypesResponse | UnauthorizedResponse;
+
+@route("/api/v1/owner/meeting-types")
+@post
+@useAuth(BearerAuth)
+op createMeetingType(
+  @body body: CreateMeetingTypeRequest,
+): CreatedMeetingTypeResponse | BadRequestResponse | ConflictResponse | UnauthorizedResponse;
+
+@route("/api/v1/owner/meeting-types/{slug}")
+@patch
+@useAuth(BearerAuth)
+op updateMeetingType(
+  @path slug: string,
+  @body body: UpdateMeetingTypeRequest,
+): MeetingType | BadRequestResponse | NotFoundResponse | UnauthorizedResponse;
+
+@route("/api/v1/owner/meeting-types/{slug}/archive")
+@post
+@useAuth(BearerAuth)
+op archiveMeetingType(
+  @path slug: string,
+): NoContentResponse | NotFoundResponse | UnauthorizedResponse;
+
+@route("/api/v1/owner/bookings")
+@get
+@useAuth(BearerAuth)
+op listOwnerBookings(): OwnerBookingsResponse | UnauthorizedResponse;
