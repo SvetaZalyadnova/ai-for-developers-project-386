@@ -4,6 +4,44 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:8080' | (string & {});
 };
 
+export type AvailabilityDate = {
+    date: string;
+    slots: Array<AvailabilitySlot>;
+};
+
+export type AvailabilityResponse = {
+    dates: Array<AvailabilityDate>;
+};
+
+export type AvailabilitySlot = {
+    startsAt: string;
+    endsAt: string;
+};
+
+export type BookingResponse = {
+    id: string;
+    meetingType: MeetingTypeSnapshot;
+    startsAt: string;
+    endsAt: string;
+};
+
+export type CreateBookingRequest = {
+    meetingTypeSlug: string;
+    startsAt: string;
+    guest: GuestInput;
+};
+
+export type FieldError = {
+    field: string;
+    code: string;
+    message: string;
+};
+
+export type GuestInput = {
+    name: string;
+    email: string;
+};
+
 export type MeetingType = {
     slug: string;
     title: string;
@@ -11,9 +49,57 @@ export type MeetingType = {
     durationMinutes: number;
 };
 
+export type MeetingTypeSnapshot = {
+    slug: string;
+    title: string;
+    durationMinutes: number;
+};
+
 export type MeetingTypesResponse = {
     items: Array<MeetingType>;
 };
+
+export type ProblemDetails = {
+    type: string;
+    title: string;
+    status: number;
+    detail: string;
+    code: string;
+    errors?: Array<FieldError>;
+};
+
+export type CreateBookingData = {
+    body: CreateBookingRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/bookings';
+};
+
+export type CreateBookingErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ProblemDetails;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ProblemDetails;
+    /**
+     * The request conflicts with the current state of the server.
+     */
+    409: ProblemDetails;
+};
+
+export type CreateBookingError = CreateBookingErrors[keyof CreateBookingErrors];
+
+export type CreateBookingResponses = {
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     */
+    201: BookingResponse;
+};
+
+export type CreateBookingResponse = CreateBookingResponses[keyof CreateBookingResponses];
 
 export type ListMeetingTypesData = {
     body?: never;
@@ -30,3 +116,37 @@ export type ListMeetingTypesResponses = {
 };
 
 export type ListMeetingTypesResponse = ListMeetingTypesResponses[keyof ListMeetingTypesResponses];
+
+export type GetAvailabilityData = {
+    body?: never;
+    path: {
+        slug: string;
+    };
+    query: {
+        from: string;
+        to: string;
+    };
+    url: '/api/v1/meeting-types/{slug}/availability';
+};
+
+export type GetAvailabilityErrors = {
+    /**
+     * The server could not understand the request due to invalid syntax.
+     */
+    400: ProblemDetails;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: ProblemDetails;
+};
+
+export type GetAvailabilityError = GetAvailabilityErrors[keyof GetAvailabilityErrors];
+
+export type GetAvailabilityResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: AvailabilityResponse;
+};
+
+export type GetAvailabilityResponse = GetAvailabilityResponses[keyof GetAvailabilityResponses];

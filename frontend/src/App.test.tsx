@@ -1,9 +1,13 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { listMeetingTypes, type MeetingType } from './api'
+import { createBooking, getAvailability, listMeetingTypes, type MeetingType } from './api'
 import App from './App'
 
-vi.mock('./api', () => ({ listMeetingTypes: vi.fn() }))
+vi.mock('./api', () => ({
+  createBooking: vi.fn(),
+  getAvailability: vi.fn(),
+  listMeetingTypes: vi.fn(),
+}))
 
 const demoTypes: MeetingType[] = [
   {
@@ -27,9 +31,29 @@ const demoTypes: MeetingType[] = [
 ]
 
 const meetingTypesRequest = vi.mocked(listMeetingTypes)
+const availabilityRequest = vi.mocked(getAvailability)
+const createBookingRequest = vi.mocked(createBooking)
 
 beforeEach(() => {
   meetingTypesRequest.mockResolvedValue({ data: { items: demoTypes }, error: undefined })
+  availabilityRequest.mockResolvedValue({
+    data: {
+      dates: [{
+        date: '2030-01-01',
+        slots: [{ startsAt: '2030-01-01T09:15:00+03:00', endsAt: '2030-01-01T09:30:00+03:00' }],
+      }],
+    },
+    error: undefined,
+  })
+  createBookingRequest.mockResolvedValue({
+    data: {
+      id: 'booking-id',
+      meetingType: { slug: 'introduction', title: 'Знакомство', durationMinutes: 15 },
+      startsAt: '2030-01-01T09:15:00+03:00',
+      endsAt: '2030-01-01T09:30:00+03:00',
+    },
+    error: undefined,
+  })
 })
 
 afterEach(() => {
@@ -108,5 +132,60 @@ describe('booking application routes', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Повторить запрос' }))
     expect(await screen.findByRole('button', { name: /Знакомство/ })).toBeTruthy()
     expect(meetingTypesRequest).toHaveBeenCalledTimes(2)
+  })
+
+  it('shows available dates and slots returned by the calendar API', async () => {
+    window.history.replaceState({}, '', '/booking')
+
+    render(<App />)
+
+    expect(await screen.findByRole('button', { name: /09:15/ })).toBeTruthy()
+    expect(screen.getByRole('button', { name: /вторник, 1 января/ })).toBeTruthy()
+  })
+
+  it('submits the selected slot and shows the server confirmation', async () => {
+    window.history.replaceState({}, '', '/booking')
+
+    render(<App />)
+    fireEvent.click(await screen.findByRole('button', { name: /09:15/ }))
+    fireEvent.change(screen.getByLabelText('Имя'), { target: { value: 'Анна' } })
+    fireEvent.change(screen.getByLabelText('Электронная почта'), {
+      target: { value: 'anna@example.com' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /Забронировать/ }))
+
+    expect(await screen.findByText(/встреча «Знакомство» забронирована/i)).toBeTruthy()
+    expect(createBookingRequest).toHaveBeenCalledWith(expect.objectContaining({
+      body: expect.objectContaining({
+        meetingTypeSlug: 'introduction',
+        startsAt: '2030-01-01T09:15:00+03:00',
+        guest: { name: 'Анна', email: 'anna@example.com' },
+      }),
+    }))
+  })
+
+  it('asks the guest to choose another time when the slot was taken', async () => {
+    createBookingRequest.mockResolvedValue({
+      data: undefined,
+      error: {
+        type: 'about:blank',
+        title: 'Conflict',
+        status: 409,
+        detail: 'Это время уже занято. Выберите другое',
+        code: 'booking_conflict',
+      },
+    })
+    window.history.replaceState({}, '', '/booking')
+
+    render(<App />)
+    fireEvent.click(await screen.findByRole('button', { name: /09:15/ }))
+    fireEvent.change(screen.getByLabelText('Имя'), { target: { value: 'Анна' } })
+    fireEvent.change(screen.getByLabelText('Электронная почта'), {
+      target: { value: 'anna@example.com' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /Забронировать/ }))
+
+    expect(await screen.findByRole('alert')).toHaveProperty('textContent',
+      'Это время уже занято. Выберите другое')
   })
 })

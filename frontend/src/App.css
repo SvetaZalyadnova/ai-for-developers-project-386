@@ -55,6 +55,7 @@
 .fields input { height: 36px; padding: 0 9px; border: 1px solid #eceaf0; border-radius: 6px; outline: none; color: #292638; font: inherit; font-size: 10px; }
 .fields input:focus { border-color: #9c83e7; box-shadow: 0 0 0 3px #8b70dc18; }
 .confirmation { padding: 9px 11px; border: 1px solid #ccebd9; border-radius: 7px; background: #f2fbf5; color: #26734b; font-size: 11px; }
+.booking-error { padding: 9px 11px; border: 1px solid #f0d1cd; border-radius: 7px; background: #fff7f6; color: #9b4138; font-size: 11px; }
 .submit-row { gap: 12px; margin-top: 14px; }
 .submit-row>span,.demo-note { color: #a09daa; font-size: 9px; }
 .submit { min-height: 37px; padding: 0 15px; border: 0; border-radius: 7px; background: #8065d6; color: white; cursor: pointer; font-size: 10px; font-weight: 700; }
