@@ -1,0 +1,49 @@
+openapi: 3.1.0
+info:
+  title: Booking Calendar API
+  version: 0.0.0
+tags: []
+paths:
+  /api/v1/meeting-types:
+    get:
+      operationId: listMeetingTypes
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingTypesResponse'
+components:
+  schemas:
+    MeetingType:
+      type: object
+      required:
+        - slug
+        - title
+        - description
+        - durationMinutes
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          format: int32
+    MeetingTypesResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingType'
+servers:
+  - url: http://localhost:8080
+    description: Local server
+    variables: {}

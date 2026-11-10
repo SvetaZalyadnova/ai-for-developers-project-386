@@ -91,6 +91,8 @@ npm run dev
 
 Для production-сборки выполните `npm run build` из каталога `frontend`. Фронтенд пока работает в демо-режиме: бронирования хранятся в памяти открытой страницы.
 
+Список активных типов встреч загружается с backend через сгенерированный SDK. Доступность и создание бронирований пока остаются демо-функциями frontend.
+
 ### Локальный запуск бэкенда
 
 ```bash
@@ -98,7 +100,9 @@ cd backend
 mvn spring-boot:run
 ```
 
-Бэкенд на Spring Boot предоставляет проверку состояния `GET http://localhost:8080/api/health`. API бронирований будет добавлен после описания контракта в TypeSpec.
+Бэкенд на Spring Boot предоставляет проверку состояния `GET http://localhost:8080/api/health` и список активных типов встреч `GET http://localhost:8080/api/v1/meeting-types`.
+
+Контракт и SDK генерируются командой `npm --prefix typespec run generate`. Она создаёт OpenAPI в `openapi/` и клиентский SDK в `frontend/src/api/`.
 
 <!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
 <img width="648" height="493" alt="image" src="https://github.com/user-attachments/assets/1e1c4575-d6ac-4dd7-8046-e69927d66cc2" />

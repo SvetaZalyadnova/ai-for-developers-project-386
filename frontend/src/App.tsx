@@ -1,13 +1,8 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { listMeetingTypes, type MeetingType } from './api'
 import './App.css'
 import HomePage from './HomePage'
-
-const meetingTypes = [
-  { title: 'Знакомство', duration: 15 },
-  { title: 'Рабочая встреча', duration: 30 },
-  { title: 'Консультация', duration: 60 },
-] as const
 
 type Booking = { date: string; start: number; duration: number }
 const dateLabel = (key: string, options: Intl.DateTimeFormatOptions) =>
@@ -17,6 +12,34 @@ const timeLabel = (minutes: number) =>
 
 function BookingPage() {
   const [now] = useState(() => Date.now())
+  const [meetingTypes, setMeetingTypes] = useState<MeetingType[] | null>(null)
+  const [meetingTypesError, setMeetingTypesError] = useState(false)
+  const [requestNumber, setRequestNumber] = useState(0)
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null)
+  const meeting = meetingTypes?.find(({ slug }) => slug === selectedSlug)
+
+  useEffect(() => {
+    let active = true
+
+    listMeetingTypes()
+      .then(({ data, error }) => {
+        if (!active) return
+        if (error || !data) {
+          setMeetingTypesError(true)
+          return
+        }
+        setMeetingTypes(data.items)
+        setSelectedSlug(data.items[0]?.slug ?? null)
+      })
+      .catch(() => {
+        if (active) setMeetingTypesError(true)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [requestNumber])
+
   const dates = useMemo(() => {
     const current = new Date(now)
     const today = Date.UTC(current.getFullYear(), current.getMonth(), current.getDate())
@@ -27,30 +50,30 @@ function BookingPage() {
     const day = new Date(`${date}T12:00:00Z`).getUTCDay()
     return day > 0 && day < 6
   })
-  const [meeting, setMeeting] = useState<(typeof meetingTypes)[number]>(meetingTypes[1])
   const [date, setDate] = useState(workdays[0] ?? dates[0])
   const [time, setTime] = useState<number | null>(null)
   const [bookings, setBookings] = useState<Booking[]>([])
   const [confirmation, setConfirmation] = useState('')
 
   const slots = useMemo(() => {
+    if (!meeting) return []
     const current = new Date(now)
     const today = new Date(Date.UTC(current.getFullYear(), current.getMonth(), current.getDate())).toISOString().slice(0, 10)
     const currentMinute = current.getHours() * 60 + current.getMinutes()
     return Array.from({ length: 36 }, (_, index) => 540 + index * 15).filter((start) => {
-      if (start + meeting.duration > 1080 || (date === today && start <= currentMinute)) return false
+      if (start + meeting.durationMinutes > 1080 || (date === today && start <= currentMinute)) return false
       return bookings.every((booking) => booking.date !== date
         || start >= booking.start + booking.duration
-        || start + meeting.duration <= booking.start)
+        || start + meeting.durationMinutes <= booking.start)
     })
   }, [bookings, date, meeting, now])
 
   function submitBooking(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (time === null) return
+    if (time === null || !meeting) return
     const form = new FormData(event.currentTarget)
     const name = String(form.get('name')).trim()
-    setBookings((current) => [...current, { date, start: time, duration: meeting.duration }])
+    setBookings((current) => [...current, { date, start: time, duration: meeting.durationMinutes }])
     setConfirmation(`${name}, встреча забронирована на ${dateLabel(date, { day: 'numeric', month: 'long' })} в ${timeLabel(time)}.`)
     setTime(null)
     event.currentTarget.reset()
@@ -77,16 +100,38 @@ function BookingPage() {
             <span className="step">01 — 03</span>
           </div>
           <section className="section">
-            <h3>Формат встречи</h3>
-            <div className="meeting-types">
-              {meetingTypes.map((option) => (
-                <button className={`meeting-type${meeting.duration === option.duration ? ' selected' : ''}`}
-                  key={option.duration} type="button" aria-pressed={meeting.duration === option.duration}
-                  onClick={() => { setMeeting(option); setTime(null); setConfirmation('') }}>
-                  <strong>{option.title}</strong><span>{option.duration} мин</span>
+            <h3>Тип встречи</h3>
+            {meetingTypes === null && !meetingTypesError && (
+              <p className="meeting-types-message" role="status">Загружаем типы встреч…</p>
+            )}
+            {meetingTypesError && (
+              <div className="meeting-types-error">
+                <p role="alert">Не удалось загрузить типы встреч.</p>
+                <button type="button" onClick={() => {
+                  setMeetingTypes(null)
+                  setMeetingTypesError(false)
+                  setRequestNumber((number) => number + 1)
+                }}>
+                  Повторить запрос
                 </button>
-              ))}
-            </div>
+              </div>
+            )}
+            {meetingTypes?.length === 0 && (
+              <p className="meeting-types-message" role="status">Типы встреч пока недоступны.</p>
+            )}
+            {meetingTypes && meetingTypes.length > 0 && (
+              <div className="meeting-types">
+                {meetingTypes.map((option) => (
+                  <button className={`meeting-type${selectedSlug === option.slug ? ' selected' : ''}`}
+                    key={option.slug} type="button" aria-pressed={selectedSlug === option.slug}
+                    onClick={() => { setSelectedSlug(option.slug); setTime(null); setConfirmation('') }}>
+                    <strong>{option.title}</strong>
+                    <span>{option.durationMinutes} мин</span>
+                    <small>{option.description}</small>
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
           <section className="section date-section">
             <div className="section-heading"><h3>Дата и время</h3><span>Ближайшие 14 дней</span></div>
@@ -120,7 +165,9 @@ function BookingPage() {
             </div>
             {confirmation && <p className="confirmation" role="status">{confirmation}</p>}
             <div className="submit-row"><span>Без регистрации · Бесплатно</span>
-              <button className="submit" type="submit" disabled={time === null}>Забронировать <b>→</b></button>
+              <button className="submit" type="submit" disabled={time === null || !meeting}>
+                Забронировать <b>→</b>
+              </button>
             </div>
           </form>
           <p className="demo-note">Демо-режим: бронирования хранятся только в этой вкладке.</p>

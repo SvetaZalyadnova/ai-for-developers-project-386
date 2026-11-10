@@ -24,10 +24,15 @@
 .section { margin-top: 22px; }
 .section h3,.guest-form h3 { margin: 0; color: #343143; font-size: 12px; font-weight: 700; }
 .meeting-types { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin-top: 11px; }
-.meeting-type { display: flex; min-height: 66px; flex-direction: column; justify-content: center; gap: 7px; padding: 10px; border: 1px solid #eceaf0; border-radius: 8px; background: white; color: #4a465a; cursor: pointer; text-align: left; }
+.meeting-type { display: flex; min-height: 94px; flex-direction: column; justify-content: center; gap: 6px; padding: 10px; border: 1px solid #eceaf0; border-radius: 8px; background: white; color: #4a465a; cursor: pointer; text-align: left; }
 .meeting-type strong { font-size: 10px; }
 .meeting-type span { color: #898694; font-size: 9px; }
+.meeting-type small { color: #898694; font-size: 8px; line-height: 1.4; }
 .meeting-type.selected { border-color: #9c83e7; background: #faf8ff; }
+.meeting-types-message,.meeting-types-error { margin: 11px 0 0; padding: 12px; border-radius: 7px; background: #faf9fb; color: #777484; font-size: 11px; }
+.meeting-types-error { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff7f6; color: #9b4138; }
+.meeting-types-error p { margin: 0; }
+.meeting-types-error button { border: 0; background: transparent; color: #7054c5; cursor: pointer; font-size: 10px; font-weight: 700; }
 .date-section { padding-top: 20px; border-top: 1px solid #f0eef3; }
 .section-heading>span { color: #a09daa; font-size: 10px; }
 .date-grid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 6px; margin-top: 12px; }
@@ -84,6 +89,7 @@ button:focus-visible,a:focus-visible { outline: 3px solid #9c83e7aa; outline-off
   .meeting-types { gap: 5px; }
   .meeting-type { padding: 8px; }
   .meeting-type strong { font-size: 9px; }
+  .meeting-type small { font-size: 7px; }
   .date-grid { gap: 3px; }
   .date-option { height: 47px; }
   .date-option span { font-size: 7px; }
