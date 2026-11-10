@@ -79,7 +79,13 @@ mise install
 mise run check
 ```
 
-Команда проверяет линтинг и сборку фронтенда, а также выполняет проверки и тесты бэкенда. GitHub Actions настраивает Java 17 и запускает эту команду на каждый push.
+Команда проверяет генерацию и актуальность OpenAPI/SDK, линтинг, тесты и сборку фронтенда, выполняет backend verify и запускает браузерный сценарий Playwright с реальными frontend и backend. GitHub Actions настраивает Java 17 и запускает эту команду на каждый push.
+
+### Релизы
+
+Release Please использует встроенный `GITHUB_TOKEN`: отдельный токен и repository secret не нужны. Он создаёт единый release PR из `main`, обновляет корневой `CHANGELOG.md` и версию в `.release-please-manifest.json`, а после слияния публикует тег и GitHub Release. Conventional Commits (`feat:`, `fix:` и другие) используются для формирования заметок; frontend и backend не версионируются отдельно.
+
+GitHub не запускает новые `push`/`pull_request` workflows в ответ на действия, выполненные с `GITHUB_TOKEN`. Поэтому workflow проверок не стартует автоматически на release PR; релизный PR нужно проверять отдельно либо настроить иной механизм запуска проверок.
 
 ### Локальный запуск фронтенда
 
@@ -91,6 +97,8 @@ npm run dev
 
 Для production-сборки выполните `npm run build` из каталога `frontend`. Фронтенд пока работает в демо-режиме: бронирования хранятся в памяти открытой страницы.
 
+Список активных типов встреч загружается с backend через сгенерированный SDK. Доступность и создание бронирований пока остаются демо-функциями frontend.
+
 ### Локальный запуск бэкенда
 
 ```bash
@@ -98,7 +106,9 @@ cd backend
 mvn spring-boot:run
 ```
 
-Бэкенд на Spring Boot предоставляет проверку состояния `GET http://localhost:8080/api/health`. API бронирований будет добавлен после описания контракта в TypeSpec.
+Бэкенд на Spring Boot предоставляет проверку состояния `GET http://localhost:8080/api/health` и список активных типов встреч `GET http://localhost:8080/api/v1/meeting-types`.
+
+Контракт и SDK генерируются командой `npm --prefix typespec run generate`. Она создаёт OpenAPI в `openapi/` и клиентский SDK в `frontend/src/api/`.
 
 <!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
 <img width="648" height="493" alt="image" src="https://github.com/user-attachments/assets/1e1c4575-d6ac-4dd7-8046-e69927d66cc2" />
