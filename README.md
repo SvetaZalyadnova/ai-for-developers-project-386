@@ -81,6 +81,12 @@ mise run check
 
 Команда проверяет генерацию и актуальность OpenAPI/SDK, линтинг, тесты и сборку фронтенда, выполняет backend verify и запускает браузерный сценарий Playwright с реальными frontend и backend. GitHub Actions настраивает Java 17 и запускает эту команду на каждый push.
 
+### Релизы
+
+Release Please использует встроенный `GITHUB_TOKEN`: отдельный токен и repository secret не нужны. Он создаёт единый release PR из `main`, обновляет корневой `CHANGELOG.md` и версию в `.release-please-manifest.json`, а после слияния публикует тег и GitHub Release. Conventional Commits (`feat:`, `fix:` и другие) используются для формирования заметок; frontend и backend не версионируются отдельно.
+
+GitHub не запускает новые `push`/`pull_request` workflows в ответ на действия, выполненные с `GITHUB_TOKEN`. Поэтому workflow проверок не стартует автоматически на release PR; релизный PR нужно проверять отдельно либо настроить иной механизм запуска проверок.
+
 ### Локальный запуск фронтенда
 
 ```bash
