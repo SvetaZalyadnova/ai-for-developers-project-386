@@ -106,7 +106,9 @@ cd backend
 mvn spring-boot:run
 ```
 
-Бэкенд на Spring Boot предоставляет проверку состояния `GET http://localhost:8080/api/health` и список активных типов встреч `GET http://localhost:8080/api/v1/meeting-types`.
+Бэкенд на Spring Boot предоставляет `GET http://localhost:8080/api/health`, публичное бронирование и закрытые маршруты владельца под `/api/v1/owner`. Для доступа к ним задайте переменную окружения `OWNER_API_TOKEN` на сервере; без неё запросы владельца отклоняются. Не добавляйте токен во frontend или репозиторий.
+
+Владелец может читать список активных типов и предстоящих бронирований, создавать и редактировать типы встреч и архивировать их. Запросы к owner API требуют `Authorization: Bearer <OWNER_API_TOKEN>`.
 
 Контракт и SDK генерируются командой `npm --prefix typespec run generate`. Она создаёт OpenAPI в `openapi/` и клиентский SDK в `frontend/src/api/`.
 
