@@ -5,10 +5,10 @@
   "scripts": {
     "generate:openapi": "tsp compile .",
     "generate:sdk": "openapi-ts",
-    "generate": "npm run generate:openapi && npm run generate:sdk"
+    "generate": "npm run generate:openapi && npm run generate:sdk",
+    "check:generated": "npm run generate && git -C .. diff --exit-code -- openapi/openapi.yaml frontend/src/api"
   },
   "devDependencies": {
-    "@hey-api/client-fetch": "^0.13.1",
     "@hey-api/openapi-ts": "^0.99.0",
     "@typespec/compiler": "^1.17.0",
     "@typespec/http": "^1.17.0",
