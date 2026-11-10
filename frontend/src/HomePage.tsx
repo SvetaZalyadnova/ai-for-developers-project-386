@@ -18,7 +18,10 @@ function HomePage() {
           <span className="home-brand-mark">К</span>
           <span>календарь<span className="home-brand-light">звонков</span></span>
         </Link>
-        <span className="home-owner">Календарь Светы Залядновой</span>
+        <nav className="home-navigation" aria-label="Основная навигация">
+          <span className="home-owner">Календарь Светы Залядновой</span>
+          <Link to="/owner">Владелец</Link>
+        </nav>
       </header>
 
       <section className="home-hero">

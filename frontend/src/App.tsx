@@ -10,6 +10,7 @@ import {
 } from './api'
 import './App.css'
 import HomePage from './HomePage'
+import OwnerPage from './OwnerPage'
 
 const dateLabel = (key: string, options: Intl.DateTimeFormatOptions) =>
   new Intl.DateTimeFormat('ru-RU', { ...options, timeZone: 'UTC' }).format(new Date(`${key}T12:00:00Z`))
@@ -313,6 +314,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/booking" element={<BookingPage />} />
+        <Route path="/owner" element={<OwnerPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
