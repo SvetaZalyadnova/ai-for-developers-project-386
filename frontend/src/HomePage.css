@@ -4,6 +4,9 @@
 .home-brand-mark { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 10px; background: #8065d6; color: white; }
 .home-brand-light { color: #898694; font-weight: 500; }
 .home-owner { color: #898694; font-size: 12px; }
+.home-navigation { display: flex; align-items: center; gap: 20px; }
+.home-navigation>a { color: #7054c5; font-size: 12px; font-weight: 650; text-decoration: none; }
+.home-navigation>a:hover { text-decoration: underline; }
 .home-hero { position: relative; display: flex; min-height: 420px; align-items: center; justify-content: space-between; gap: 40px; margin: 34px 0 52px; padding: 54px 7%; overflow: hidden; border: 1px solid #eceaf0; border-radius: 16px; background: linear-gradient(112deg, #f7f5ff 0%, #fbfaff 55%, #f1edff 100%); }
 .home-hero-copy { position: relative; z-index: 1; max-width: 580px; }
 .home-eyebrow { margin: 0 0 13px; color: #8065d6; font-size: 10px; font-weight: 800; letter-spacing: 1.3px; }
@@ -45,7 +48,8 @@
 @media(max-width: 480px) {
   .home-page { width: 100%; }
   .home-header { height: 65px; padding: 0 17px; }
-  .home-owner { font-size: 10px; }
+  .home-navigation { gap: 10px; }
+  .home-owner,.home-navigation>a { font-size: 10px; }
   .home-hero { margin: 0; padding: 43px 20px; border-right: 0; border-left: 0; border-radius: 0; }
   .home-hero h1 { font-size: 38px; letter-spacing: -1.8px; }
   .home-lead { font-size: 13px; }

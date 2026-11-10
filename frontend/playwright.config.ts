@@ -9,6 +9,9 @@ export default defineConfig({
     {
       command: 'mvn -f ../backend/pom.xml spring-boot:run',
       url: 'http://127.0.0.1:8080/api/v1/meeting-types',
+      env: {
+        OWNER_API_TOKEN: process.env.OWNER_API_TOKEN ?? 'playwright-owner-token',
+      },
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },
