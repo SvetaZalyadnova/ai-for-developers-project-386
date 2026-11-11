@@ -1,0 +1,9 @@
+.git
+.github
+.agents
+**/node_modules
+**/target
+**/dist
+**/.env
+**/.env.*
+.mcp.json
