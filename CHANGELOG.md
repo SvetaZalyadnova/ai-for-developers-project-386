@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/compare/v1.0.0...v1.1.0) (2026-11-12)
+
+
+### Features
+
+* Docker-образ и Render деплой ([#20](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/issues/20)) ([9dd5ebc](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/commit/9dd5ebc465af58fbd6609cbfa2c5025dbcfb4905))
+* добавить owner API и управление встречами ([#13](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/issues/13)) ([f559fcc](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/commit/f559fcc8bc06eab8b0539315d45a55948c26b21c))
+* добавить интерфейс владельца ([#18](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/issues/18)) ([7640473](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/commit/7640473626ae87010a1821a5ee29a8648fadcb31))
+
+
+### Bug Fixes
+
+* refresh availability after booking conflicts ([#12](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/issues/12)) ([1e2c7c4](https://github.com/SvetaZalyadnova/ai-for-developers-project-386/commit/1e2c7c401634de6e7f1738e71d4d2562e766d104))
+
 ## 1.0.0 (2026-11-10)
 
 
