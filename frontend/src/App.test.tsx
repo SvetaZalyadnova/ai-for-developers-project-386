@@ -154,7 +154,7 @@ describe('booking application routes', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: /Забронировать/ }))
 
-    expect(await screen.findByText(/встреча «Знакомство» забронирована/i)).toBeTruthy()
+    expect(await screen.findByText(/встреча «Знакомство» забронирована на 1 января с 09:15 до 09:30/i)).toBeTruthy()
     expect(createBookingRequest).toHaveBeenCalledWith(expect.objectContaining({
       body: expect.objectContaining({
         meetingTypeSlug: 'introduction',

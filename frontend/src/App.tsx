@@ -145,7 +145,7 @@ function BookingPage() {
       setConfirmation(
         `${name}, встреча «${data.meetingType.title}» забронирована на ${
           dateLabel(data.startsAt.slice(0, 10), { day: 'numeric', month: 'long' })
-        } в ${timeLabel(data.startsAt)}.`,
+        } с ${timeLabel(data.startsAt)} до ${timeLabel(data.endsAt)}.`,
       )
       setSelectedSlot(null)
       formElement.reset()
