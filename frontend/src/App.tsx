@@ -137,6 +137,9 @@ function BookingPage() {
       })
       if (error || !data) {
         setBookingError(error?.detail ?? 'Не удалось создать бронирование. Попробуйте ещё раз.')
+        if (error?.status === 409) {
+          setAvailabilityRequestNumber((number) => number + 1)
+        }
         return
       }
       setConfirmation(
