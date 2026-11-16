@@ -141,6 +141,25 @@ describe('booking application routes', () => {
 
     expect(await screen.findByRole('button', { name: /09:15/ })).toBeTruthy()
     expect(screen.getByRole('button', { name: /вторник, 1 января/ })).toBeTruthy()
+    expect(screen.queryByText('январь')).toBeNull()
+  })
+
+  it('labels each month when available dates span two months', async () => {
+    availabilityRequest.mockResolvedValueOnce({
+      data: {
+        dates: [
+          { date: '2030-01-31', slots: [{ startsAt: '2030-01-31T09:15:00+03:00', endsAt: '2030-01-31T09:30:00+03:00' }] },
+          { date: '2030-02-01', slots: [{ startsAt: '2030-02-01T09:15:00+03:00', endsAt: '2030-02-01T09:30:00+03:00' }] },
+        ],
+      },
+      error: undefined,
+    })
+    window.history.replaceState({}, '', '/booking')
+
+    render(<App />)
+
+    expect(await screen.findByText('январь')).toBeTruthy()
+    expect(screen.getByText('февраль')).toBeTruthy()
   })
 
   it('submits the selected slot and shows the server confirmation', async () => {

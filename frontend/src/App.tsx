@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { Fragment, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import {
   createBooking,
@@ -117,6 +117,9 @@ function BookingPage() {
     () => availableDates?.find((availableDate) => availableDate.date === date)?.slots ?? [],
     [availableDates, date],
   )
+  const hasMultipleAvailableMonths = new Set(
+    availableDates?.map(({ date: key }) => key.slice(0, 7)) ?? [],
+  ).size > 1
 
   async function submitBooking(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -219,20 +222,30 @@ function BookingPage() {
           <section className="section date-section">
             <div className="section-heading"><h3>Дата и время</h3><span>Ближайшие 14 дней</span></div>
             <div className="date-grid">
-              {availableDates?.map(({ date: key }) => (
-                <button className={`date-option${date === key ? ' selected' : ''}`} key={key}
-                  type="button" aria-pressed={date === key}
-                  aria-label={dateLabel(key, { weekday: 'long', day: 'numeric', month: 'long' })}
-                  onClick={() => {
-                    setDate(key)
-                    setSelectedSlot(null)
-                    setConfirmation('')
-                    setBookingError('')
-                  }}>
-                  <span>{dateLabel(key, { weekday: 'short' }).replace('.', '')}</span>
-                  <strong>{dateLabel(key, { day: 'numeric' })}</strong>
-                </button>
-              ))}
+              {availableDates?.map(({ date: key }, index) => {
+                const month = key.slice(0, 7)
+                const previousMonth = availableDates[index - 1]?.date.slice(0, 7)
+
+                return (
+                  <Fragment key={key}>
+                    {hasMultipleAvailableMonths && month !== previousMonth && (
+                      <h4 className="date-month">{dateLabel(key, { month: 'long' })}</h4>
+                    )}
+                    <button className={`date-option${date === key ? ' selected' : ''}`}
+                      type="button" aria-pressed={date === key}
+                      aria-label={dateLabel(key, { weekday: 'long', day: 'numeric', month: 'long' })}
+                      onClick={() => {
+                        setDate(key)
+                        setSelectedSlot(null)
+                        setConfirmation('')
+                        setBookingError('')
+                      }}>
+                      <span>{dateLabel(key, { weekday: 'short' }).replace('.', '')}</span>
+                      <strong>{dateLabel(key, { day: 'numeric' })}</strong>
+                    </button>
+                  </Fragment>
+                )
+              })}
             </div>
             <div className="slots-heading">
               <span>{date
